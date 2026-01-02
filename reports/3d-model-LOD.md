@@ -104,7 +104,7 @@ Out in the field, understanding information from drawings is key, and no spreads
 
 In further research, I will explore customizing the scene- changing colours, filtering for specific conditions, and running simulations. As well, I explore scaling up- identifying optimizations that can be made to further increase our file size, while limiting the effects on performance.
 
-You can find more information about this research on my [github](https://github.com/suryashch).
+You can find more information about this research on my [github](https://github.com/suryashch/3d_modelling).
 
 ## Credits
 
