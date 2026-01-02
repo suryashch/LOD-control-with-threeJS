@@ -44,7 +44,7 @@ const light_5 = new THREE.DirectionalLight(0xffffff, 0.25);
 light_5.position.set(-10,10,10)
 scene.add(light_5);
 
-const gridHelper = new THREE.GridHelper( 100, 50 ); // ( size, divisions )
+const gridHelper = new THREE.GridHelper( 100, 50 );
 scene.add( gridHelper );
 
 const perfMonitor = new PerformanceMonitor()
