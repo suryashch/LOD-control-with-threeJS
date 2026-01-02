@@ -2,21 +2,21 @@
 
 In the construction industry, 3D models provide a level of visual context that simply cannot be matched through spreadsheets. However, working with them often requires using specialized tools and heavy duty hardware. For quick mock-ups and visualizations, one such tool is often overlooked- the humble web browser.
 
-In this paper, I propose a Proof of Concept whereby 3D models can be hosted on any webpage and viewed on any device with a web browser- no dedicated software needed. I explore the basics of 3D modelling, mesh compression techniques, creating scenes in `three.js`, and swapping between different versions of a mesh depending on how far away the user is from the object.
+In this paper, I propose a proof of concept whereby 3D models can be hosted on any webpage and viewed on any device with a web browser- no dedicated software needed. I explore the basics of 3D modelling, mesh compression techniques, creating scenes in `three.js`, and swapping between different versions of a mesh depending on how far away the user is from the object.
 
-[Our Final Scene](https://suryashch.github.io/3d_modelling/) contains 303 objects, each with a `low-res` and `hi-res` resolution version of their 3D mesh (red and green respectively), that dynamically renders to the screen as you zoom in.
+[The final scene](https://suryashch.github.io/3d_modelling/) contains 303 objects, each with a `low-res` and `hi-res` resolution version of their 3D mesh (red and green respectively), that dynamically render to the screen as the user zooms in.
 
 Through the optimizations in this project, I was able to achieve a peak `5x` improvement in GPU performance, and average `3.3x` improvement in webpage performance over the standard 3D model, all while keeping draw calls constant. The full paper and research body of knowledge can be found [here](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/per-object-lod-control-with-threejs.md).
 
 ## 3D Modelling Basics
 
-The fundamental building blocks of 3D models are [`vertices` and `edges`](https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_decimate.md). `vertices` can be thought of as 'corners' while `edges` are what connect the corners to each other. In a cube, we have 8 `vertices` and 12 `edges`, as you can see in the image below (in no praticular order).
+The fundamental building blocks of 3D models are [`vertices` and `edges`](https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_decimate.md). `vertices` can be thought of as 'corners' while `edges` are what connect the corners to each other. In a cube, we have 8 `vertices` and 12 `edges`, as can be seen in the image below (in no praticular order).
 
 ![cubes edges and vertices defined](img/cubes-edges-vertices.png)
 
 As the total number of `vertices` and `edges` in the scene increase, so does the strain on the GPU and as a result, it becomes laggy when you try to move around. Reducing the number of `vertices` and `edges` in the scene will improve the performance.
 
-One piece of geometry that often goes overlooked in construction models is the piping- modelled as cylinders. Circles don't have any corners- a circle can be thought of as infinitely many corners that all connect to each other. It is impossible to model a perfect circle, so we approximate it using a large number of `vertices`. The more `vertices`, the more the object starts looking like a circle.
+One piece of geometry that often goes overlooked in construction models is Piping- modelled as cylinders. Circles don't have any corners- a circle can be thought of as infinitely many corners that all connect to each other. It is impossible to model a perfect circle, so it is approximated using a large number of `vertices`. The more `vertices`, the more the object starts looking like a circle.
 
 Hence, when we extrude all these individual edges and vertices into the page, we get a cylinder (pipe), which is computationally inefficient for how fundamental of a shape it is.
 
@@ -26,39 +26,39 @@ Each one of these edges and vertices need to be kept track of by the computer's 
 
 ## Reducing the Density of the Mesh
 
-The `density` of a mesh is a measure of how many individual `vertices` and `edges` exist within it. We can reduce the density of the mesh by removing some `vertices` from it. By removing these data points however, we trade density for details and as you see in the image below, the finer details of our mesh is lost.
+The `density` of a mesh is a measure of how many individual `vertices` and `edges` exist within it. The density of the mesh can be reduced by removing some `vertices` from it. By removing these data points however, we sacrifice on details and as can be seen in the image below- the finer details of the mesh is lost.
 
 ![Cylinder Comparison Before and After Compression](img/cylinder_decimate_comparison.png)
 
-One easy way to reduce the mesh density is using a technique called [`Decimate`](https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_decimate.md) in Blender. This modifier will remove `edges` in a mesh upto a specified `ratio`, while maintaining the overall shape of the object. Here we run a test case of `decimating` a 3D mesh model of a human foot [^1] upto a ratio of 0.1.
+One easy way to reduce the mesh density is using a technique called [`Decimate`](https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_decimate.md) in Blender. This modifier will remove `edges` in a mesh upto a specified `ratio`, while maintaining the overall shape of the object. The results below show a test case of `decimating` a 3D mesh model of a human foot [^1] upto a ratio of 0.1.
 
 ![Mesh model of human foot before and after compression](img/foot_comparison.png)
 
-We see that we indeed lose visual quality. But, if we zoom out far enough-
+The mesh has lost a lot of visual quality. But, if we zoom out far enough-
 
 ![Mesh models of human foot zoomed out to show similarities](img/foot_comparison_zoomed.png)
 
-Both meshes look similar. **At far enough distances, mesh quality can be reduced with limited change to visual context.** We proceed with this information.
+Both meshes look similar. **At far enough distances, mesh quality can be reduced with limited change to visual context.**
 
 ## Loading a 3D Model to a Webpage
 
 The JavaScript library `three.js` [^9] provides useful tools for viewing 3D models in a web-based environment. The basic concept behind `three.js` is to create a `scene`, and add objects to it, like `lights`, `cameras`, `backgrounds`, and of course, [`3D objects`](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/analysis_threejs.md).
 
-The file format we will be using for our 3D objects is the GLTF file format. GLTF is an open source 3D file format that is optimized for rendering in a web environment.
+The file format we use for our 3D objects is the `GLTF` [^12] file format. `GLTF` is an open source 3D file format that is optimized for rendering in a web environment.
 
-The 3D model we will be working with is of a `piperack` [^2]. The base file size is ~7MB, so definitely a small 3D model. We load it to our scene along with some lights, cameras, and spatial grid for reference.
+The 3D model being used for testing is that of a `piperack` [^2]. The base file size is ~7MB; a relatively small 3D model. The model is loaded to the scene along with some lights, cameras, and spatial grid for reference.
 
 ![Scene with Model](img/background_with-model.png)
 
 ## Basic LOD in three.js
 
-LOD (Level of Detail) modelling involves creating low and high resolution meshes for each object in the scene, and dynamically rendering each one based on [how far the object is from the camera](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/analysis_superposing-models.md). This way, far-away objects can render in low-resolution, GPU-friendly mode, and near objects can render in their full high definition. Since the total number of `vertices` and `edges` are less in our `low-res` model, we can use this to improve the performance of our scene.
+LOD (Level of Detail) modelling involves creating low and high resolution meshes for each object in the scene, and dynamically rendering each one based on [how far the object is from the camera](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/analysis_superposing-models.md). This way, far-away objects can render in low-resolution, GPU-friendly mode, and near objects can render in their full high definition. Since the total number of `vertices` and `edges` are less in the `low-res` model, switching to these meshes when they are a certain distance away will improve the performance of the scene.
 
-In `three.js`, LOD control is done using the `three.LOD` class [^10]. At a high level, a `LOD` can be thought of as a container that holds meshes. Based on some distance threshold, the `LOD` swaps which mesh is active at any time. In this example, we load 3 versions of our `human foot` [^1] mesh- `hi-res`, `med-res`, and `low-res`, corresponding to 1, 0.4, and 0.1 `decimate ratios` respectively. The meshes have been coloured for identification purposes.
+In `three.js`, LOD control is done using the `three.LOD` class [^10]. At a high level, a `LOD` can be thought of as a container that holds meshes. Based on some distance threshold, the `LOD` swaps which mesh is active at any time. In this example, 3 versions of the `human foot` [^1] mesh are created- `hi-res`, `med-res`, and `low-res`, corresponding to 1, 0.4, and 0.1 `decimate ratios` respectively. The meshes have been coloured for identification purposes.
 
 ![Foot model LOD version colored](img/human-foot-LOD-versions-color.png)
 
-We load these 3 meshes into one `LOD` container and set distance thresholds of 10 units and 5 units from the camera. Now, as we zoom into the page, the active mesh changes at those [specified distance thresholds](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/basic-lod-control-with-threejs.md).
+These 3 meshes are loaded into one `LOD` container with distance thresholds of 10 units and 5 units from the camera. Now, zooming into the page changes the active mesh based on the [specified distance thresholds](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/basic-lod-control-with-threejs.md).
 
 ![Foot model LOD containers aligned and colors changed](img/foot-lod-pos-synced-color.gif)
 
@@ -66,31 +66,31 @@ Let's extend this knowledge out to our `piperacks` model [^2].
 
 ## Per Object LOD in three.js
 
-We would like to replicate our `LOD` results above to a larger 3D model with many more objects. We create a low-resolution version of our `piperack` [^2] model at 0.4 `decimate ratio`. We also colour our `low-res` meshes in `red` and `hi-res` meshes in `green`.
+In this section, we replicate our `LOD` results above to a larger 3D model with many more objects. The first step is to create a low-resolution version of the `piperack` [^2] model at 0.4 `decimate ratio`. For easy identification, the meshes are color coded- `low-res` meshes in `red` and `hi-res` meshes in `green`.
 
 ![Per Object LOD Control Color Coded](img/per-object-lod-control-mesh-colors.png)
 
-Now, instead of loading our entire model, we need to loop through every object in the scene and for each one, save the `low-res` and `hi-res` meshes to one `LOD` container. This involves using a function called `.traverse()` [^11]. Naming of the objects in the scene here is key, as the name is what allows the traversal function to identify the low and high resolution meshes.
+Creating the LODs involves looping through the scene and for each object, saving the `low-res` and `hi-res` meshes to one `LOD` container. This process utilizes a function called `.traverse()` [^11]. Naming of the objects in the scene here is key, as the name is what allows the traversal function to identify the low and high resolution meshes.
 
-We create a `Map()` to store key-value pairs. Each key in our map contains Object `name`, and the data associated with the high and low resolution mesh. Conceptually, this is what the scene tree looks like after traversing the model.
+A `Map()` object is used to store key-value pairs. Each key in the map contains the Object `name`, and data associated with the high and low resolution mesh. Conceptually, this is what the scene tree looks like after traversing the model.
 
 ![Working Scene Tree](img/scene-tree-working.png)
 
 Each object in the scene is saved to one `LOD` container, and each container contains 2 meshes.
 
-Now when we load this dynamic `LOD` model to our scene, this is what we're greeted with.
+Now upon loading the `LOD` model to the scene, this is what we're greeted with.
 
 ![Working LOD Controlled Model](img/first-working-lod-model.gif)
 
-The initial load shows all objects rendered in `low-res` mode. Zooming in to specific objects causes them to render in `hi-res`. We measure our performance of the scene against 3 main metrics- `draw calls` (proxy for CPU usage), `triangles` (proxy for GPU usage), and `memory`. Here are some key results.
+The initial load shows all objects rendered in `low-res` mode. Zooming in to specific objects causes them to render in `hi-res`. We measure the performance of the scene against 3 main metrics- `draw calls` (proxy for CPU usage), `triangles` (proxy for GPU usage), and `memory`. Here are some key results.
 
 ![Performance Results 50ft View](img/performance-results-50ft-view.png)
 
-At a high level 50ft view, we only have the `low-res` version of the model loaded to the scene. Hence we observe our best performance improvements, at roughly 5x `triangles` reduction.
+At a high level 50ft view, only the `low-res` version of the model is active. Hence we observe our best performance improvements, at roughly 5x `triangles` reduction.
 
 ![Performance Results West End of Piperack](img/performance-results-westend-of-piperack.png)
 
-The complex geometry of the wellhead in the background is rendered in `low-res` in our dynamic model, significantly reducing the number of `triangles` being tracked by the GPU.
+The complex geometry of the wellhead in the background is rendered in `low-res` in the dynamic model, significantly reducing the number of `triangles` being tracked by the GPU.
 
 ![Performance Results of Main Piperack](img/performance-results-main-piperack.png)
 
@@ -179,8 +179,14 @@ You can find more information about my research on my [github](https://github.co
   url     = {https://threejs.org/docs/#LOD}
 }
 
-11) = traverse = {
+11) traverse = {
   title   = {three.object3d.traverse()},
   author  = {three.js},
   url     = {https://threejs.org/docs/#Object3D.traverse}
+}
+
+12) gltf = {
+  title   = {gltf},
+  author  = {Khronos Group},
+  url     = {https://www.khronos.org/Gltf}
 }
