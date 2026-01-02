@@ -22,7 +22,7 @@ Hence, when we extrude all these individual edges and vertices into the page, we
 
 ![Cylinder Vertices and Edges](img/cylinder.png)
 
-Each one of these edges and vertices need to be kept track of by the computer's GPU. In large models, this is usually what causes the lag. Let's see if we can reduce the total number of edges and vertices in an object.
+Each one of these edges and vertices need to be kept track of by the computer's GPU. In large models, this is usually what causes the lag. Reducing the density of the mesh is one way to reduce the strain on the GPU.
 
 ## Reducing the Density of the Mesh
 
