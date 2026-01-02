@@ -108,85 +108,74 @@ You can find more information about my research on my [github](https://github.co
 
 ## Credits
 
-1) human_foot_model = {
-  title        = {Human Foot Base Mesh},
-  author       = {ferrumiron6},
-  year         = {2025},
-  howpublished = {SketchFab},
-  url          = {https://sketchfab.com/3d-models/human-foot-base-mesh-b6dd50f7e87441dca79e24f8c702f84f}
-}
+[^1]: human_foot_model =
+  title        = Human Foot Base Mesh,
+  author       = ferrumiron6,
+  year         = 2025,
+  howpublished = SketchFab,
+  url          = https://sketchfab.com/3d-models/human-foot-base-mesh-b6dd50f7e87441dca79e24f8c702f84f
 
-2) piperacks_model = {
-  title        = {Pipe Racks Building Blocks Bundle},
-  author       = {The Learning Network},
-  year         = {2020},
-  howpublished = {Free3D},
-  url          = {https://free3d.com/3d-model/pipe-racks-building-blocks-bundle-2755.html?dd_referrer=},
-  note         = {{Royalty Free License}: https://free3d.com/royalty-free-license}
-}
+[^2]: piperacks_model =
+  title        = Pipe Racks Building Blocks Bundle,
+  author       = The Learning Network,
+  year         = 2020,
+  howpublished = Free3D,
+  url          = https://free3d.com/3d-model/pipe-racks-building-blocks-bundle-2755.html?dd_referrer=,
+  note         = Royalty Free License: https://free3d.com/royalty-free-license
 
-3) analysis_decimate = {
-  title   = {Reducing Mesh Density of 3D Objects in Blender},
-  author  = {Suryash Chakravarty},
-  year    = {2025},
-  url     = {https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_decimate.md}
-}
+[^3]: analysis_decimate =
+  title   = Reducing Mesh Density of 3D Objects in Blender,
+  author  = Suryash Chakravarty,
+  year    = 2025,
+  url     = https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_decimate.md
 
-4) mean_pooling_on_mesh = {
-  title   = {Mean Pooling Function on a 3D Model},
-  author  = {Suryash Chakravarty},
-  year    = {2025},
-  url     = {https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_mean-pooling-on-mesh.md}
-}
 
-5) hosting_3d_model = {
-  title   = {Hosting 3D models on a Website},
-  author  = {Suryash Chakravarty},
-  year    = {2025},
-  url     = {https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/analysis_threejs.md}
-}
+[^4]: mean_pooling_on_mesh =
+  title   = Mean Pooling Function on a 3D Model,
+  author  = Suryash Chakravarty,
+  year    = 2025,
+  url     = https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_mean-pooling-on-mesh.md
 
-6) superposing_models = {
-  title   = {Superposing Models of Different LOD in a Web Based Environment},
-  author  = {Suryash Chakravarty},
-  year    = {2025},
-  url     = {https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/analysis_superposing-models.md}
-}
+[^5]: hosting_3d_model =
+  title   = Hosting 3D models on a Website,
+  author  = Suryash Chakravarty,
+  year    = 2025,
+  url     = https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/analysis_threejs.md
 
-7) basic_lod_control = {
-  title   = {Basic LOD Control with ThreeJS},
-  author  = {Suryash Chakravarty},
-  year    = {2025},
-  url     = {https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/basic-lod-control-with-threejs.md}
-}
+[^6]: superposing_models =
+  title   = Superposing Models of Different LOD in a Web Based Environment,
+  author  = Suryash Chakravarty,
+  year    = 2025,
+  url     = https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/analysis_superposing-models.md
 
-8) per_obj_lod = {
-  title   = {Per Object LOD Control With ThreeJS},
-  author  = {Suryash Chakravarty},
-  year    = {2025},
-  url     = {https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/per-object-lod-control-with-threejs.md}
-}
+[^7]: basic_lod_control =
+  title   = Basic LOD Control with ThreeJS,
+  author  = Suryash Chakravarty,
+  year    = 2025,
+  url     = https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/basic-lod-control-with-threejs.md
 
-9) three.js = {
-  title   = {three.js},
-  author  = {threejs.org},
-  url     = {https://threejs.org/docs/}
-}
+[^8]: per_obj_lod =
+  title   = Per Object LOD Control With ThreeJS,
+  author  = Suryash Chakravarty,
+  year    = 2025,
+  url     = https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/per-object-lod-control-with-threejs.md
 
-10) three_lod = {
-  title   = {three.LOD},
-  author  = {three.js},
-  url     = {https://threejs.org/docs/#LOD}
-}
+[^9]: three.js =
+  title   = three.js,
+  author  = threejs.org,
+  url     = https://threejs.org/docs/
 
-11) traverse = {
-  title   = {three.object3d.traverse()},
-  author  = {three.js},
-  url     = {https://threejs.org/docs/#Object3D.traverse}
-}
+[^10]: three_lod =
+  title   = three.LOD,
+  author  = three.js,
+  url     = https://threejs.org/docs/#LOD
 
-12) gltf = {
-  title   = {gltf},
-  author  = {Khronos Group},
-  url     = {https://www.khronos.org/Gltf}
-}
+[^11]: traverse =
+  title   = three.object3d.traverse(),
+  author  = three.js,
+  url     = https://threejs.org/docs/#Object3D.traverse
+
+[^12]: gltf =
+  title   = gltf,
+  author  = Khronos Group,
+  url     = https://www.khronos.org/Gltf
