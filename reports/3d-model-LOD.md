@@ -10,9 +10,9 @@ Through the optimizations in this project, I was able to achieve a peak `5x` imp
 
 ## 3D Modelling Basics
 
-The fundamental building blocks of 3D models are [`vertices` and `edges`](https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_decimate.md). `vertices` can be thought of as 'corners' while `edges` are what connect the corners to each other. In a cube, we have 8 `vertices` and 12 `edges`, as can be seen in the image below (in no praticular order).
+The fundamental building blocks of 3D models are `vertices` and `edges`[^3]. `vertices` can be thought of as 'corners' while `edges` are what connect the corners to each other. In a cube, we have 8 `vertices` and 12 `edges`, as can be seen in the image below (in no praticular order).
 
-![cubes edges and vertices defined](img/cubes-edges-vertices.png) {width=30%}
+![cubes edges and vertices defined](img/cubes-edges-vertices.png)
 
 As the total number of `vertices` and `edges` in the scene increase, so does the strain on the GPU and as a result, it becomes laggy when you try to move around. Reducing the number of `vertices` and `edges` in the scene will improve the performance.
 
@@ -30,7 +30,7 @@ The `density` of a mesh is a measure of how many individual `vertices` and `edge
 
 ![Cylinder Comparison Before and After Compression](img/cylinder_decimate_comparison.png)
 
-One easy way to reduce the mesh density is using a technique called [`Decimate`](https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_decimate.md) in Blender. This modifier will remove `edges` in a mesh upto a specified `ratio`, while maintaining the overall shape of the object. The results below show a test case of `decimating` a 3D mesh model of a human foot [^1] upto a ratio of 0.1.
+One easy way to reduce the mesh density is using a technique called `Decimate` [^3] in Blender. This modifier will remove `edges` in a mesh upto a specified `ratio`, while maintaining the overall shape of the object. The results below show a test case of `decimating` a 3D mesh model of a human foot [^1] upto a ratio of 0.1.
 
 ![Mesh model of human foot before and after compression](img/foot_comparison.png)
 
@@ -42,7 +42,7 @@ Both meshes look similar. **At far enough distances, mesh quality can be reduced
 
 ## Loading a 3D Model to a Webpage
 
-The JavaScript library `three.js` [^9] provides useful tools for viewing 3D models in a web-based environment. The basic concept behind `three.js` is to create a `scene`, and add objects to it, like `lights`, `cameras`, `backgrounds`, and of course, [`3D objects`](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/analysis_threejs.md).
+The JavaScript library `three.js` [^9] provides useful tools for viewing 3D models in a web-based environment. The basic concept behind `three.js` is to create a `scene`, and add objects to it, like `lights`, `cameras`, `backgrounds`, and of course, `3D objects`[^5].
 
 The file format we use for our 3D objects is the `GLTF` [^12] file format. `GLTF` is an open source 3D file format that is optimized for rendering in a web environment.
 
@@ -52,13 +52,13 @@ The 3D model being used for testing is that of a `piperack` [^2]. The base file 
 
 ## Basic LOD in three.js
 
-LOD (Level of Detail) modelling involves creating low and high resolution meshes for each object in the scene, and dynamically rendering each one based on [how far the object is from the camera](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/analysis_superposing-models.md). This way, far-away objects can render in low-resolution, GPU-friendly mode, and near objects can render in their full high definition. Since the total number of `vertices` and `edges` are less in the `low-res` model, switching to these meshes when they are a certain distance away will improve the performance of the scene.
+LOD (Level of Detail) modelling involves creating low and high resolution meshes for each object in the scene, and dynamically rendering each one based on how far the object is from the camera [^6]. This way, far-away objects can render in low-resolution, GPU-friendly mode, and near objects can render in their full high definition. Since the total number of `vertices` and `edges` are less in the `low-res` model, switching to these meshes when they are a certain distance away will improve the performance of the scene.
 
 In `three.js`, LOD control is done using the `three.LOD` class [^10]. At a high level, a `LOD` can be thought of as a container that holds meshes. Based on some distance threshold, the `LOD` swaps which mesh is active at any time. In this example, 3 versions of the `human foot` [^1] mesh are created- `hi-res`, `med-res`, and `low-res`, corresponding to 1, 0.4, and 0.1 `decimate ratios` respectively. The meshes have been coloured for identification purposes.
 
 ![Foot model LOD version colored](img/human-foot-LOD-versions-color.png)
 
-These 3 meshes are loaded into one `LOD` container with distance thresholds of 10 units and 5 units from the camera. Now, zooming into the page changes the active mesh based on the [specified distance thresholds](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/basic-lod-control-with-threejs.md).
+These 3 meshes are loaded into one `LOD` container with distance thresholds of 10 units and 5 units from the camera. Now, zooming into the page changes the active mesh based on the specified distance thresholds[^7].
 
 ![Foot model LOD containers aligned and colors changed](img/foot-lod-pos-synced-color.gif)
 
@@ -96,7 +96,7 @@ The complex geometry of the wellhead in the background is rendered in `low-res` 
 
 The main piperack of the scene is loaded dynamically- far away objects in `low-res` while near objects in `hi-res`. This will be on average, the compression capabilites that can be achieved in everyday use.
 
-The full explanation and in-depth analysis of results can be found [in this file](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/per-object-lod-control-with-threejs.md).
+The full explanation and in-depth analysis of results can be found in the body of knowledge [^8].
 
 ## Conclusion
 
