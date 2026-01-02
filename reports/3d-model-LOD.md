@@ -23,7 +23,7 @@ In this paper, I propose a Proof of Concept whereby 3D models can be hosted on a
 
 [Our Final Scene](https://suryashch.github.io/3d_modelling/) contains 303 objects, each with a `low-res` and `hi-res` resolution version of their 3D mesh (red and green respectively), that dynamically renders to the screen as you zoom in.
 
-Through the optimizations in this project, I waas able to achieve a peak `5x` improvement in GPU performance, and average `3.3x` improvement in webpage performance over the standard 3D model, all while keeping draw calls constant. The full paper and research body of knowledge can be found [here](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/per-object-lod-control-with-threejs.md) @per_obj_lod.
+Through the optimizations in this project, I was able to achieve a peak `5x` improvement in GPU performance, and average `3.3x` improvement in webpage performance over the standard 3D model, all while keeping draw calls constant. The full paper and research body of knowledge can be found [here](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/per-object-lod-control-with-threejs.md) @per_obj_lod.
 
 ## 3D Modelling Basics
 
