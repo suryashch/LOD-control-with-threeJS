@@ -1,16 +1,16 @@
 # Improving 3D Model Performance With LOD Control
 
-In the construction industry, 3D models provide a level of visual context that simply cannot be matched through spreadsheets. However, working with them often requires using specialized tools and heavy duty hardware. For quick mock-ups and visualizations, one such tool is often overlooked- the humble web browser.
+In the construction industry, 3D models provide a level of visual context that simply cannot be matched through spreadsheets. However, working with them often requires specialized software and heavy-duty hardware. For quick mock-ups and visualizations, one such tool is often overlooked- the humble web browser.
 
 In this paper, I propose a proof of concept whereby 3D models can be hosted on any webpage and viewed on any device with a web browser- no dedicated software needed. I explore the basics of 3D modelling, mesh compression techniques, creating scenes in `three.js`, and swapping between different versions of a mesh depending on how far away the user is from the object.
 
 [The final scene](https://suryashch.github.io/3d_modelling/) contains 303 objects, each with a `low-res` and `hi-res` resolution version of their 3D mesh (red and green respectively), that dynamically render to the screen as the user zooms in.
 
-Through the optimizations in this project, I was able to achieve a peak `5x` improvement in GPU performance, and average `3.3x` improvement in webpage performance over the standard 3D model, all while keeping draw calls constant. The full paper and research body of knowledge can be found [here](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/per-object-lod-control-with-threejs.md).
+Through the optimizations in this project, I was able to achieve a peak `5x` improvement in GPU performance, and average `3.3x` improvement in webpage performance over the standard 3D model (measured via average frame rate and GPU triangle throughput), all while keeping draw calls constant. The full paper and research body of knowledge can be found [in the body of knowledge repo](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/per-object-lod-control-with-threejs.md).
 
 ## 3D Modelling Basics
 
-The fundamental building blocks of 3D models are `vertices` and `edges`[^3]. `vertices` can be thought of as 'corners' while `edges` are what connect the corners to each other. In a cube, we have 8 `vertices` and 12 `edges`, as can be seen in the image below (in no praticular order).
+The fundamental building blocks of 3D models are `vertices`, `edges` and `faces` (typically triangles)[^3]. `vertices` can be thought of as 'corners' while `edges` are what connect the corners to each other. Multiple edges combine to make a loop, known as a `face`. In a cube, we have 8 `vertices` (in black) and 12 `edges` (in red), as can be seen in the image below (in no particular order).
 
 ![cubes edges and vertices defined](img/cubes-edges-vertices.png)
 
@@ -26,7 +26,7 @@ Each one of these edges and vertices need to be kept track of by the computer's 
 
 ## Reducing the Density of the Mesh
 
-The `density` of a mesh is a measure of how many individual `vertices` and `edges` exist within it. The density of the mesh can be reduced by removing some `vertices` from it. By removing these data points however, we sacrifice on details and as can be seen in the image below- the finer details of the mesh is lost.
+The `density` of a mesh is a measure of how many individual `vertices` and `edges` exist within it. The density of the mesh can be reduced by removing some `vertices` from it. By removing these data points however, we sacrifice on details and as can be seen in the image below- the finer details of the mesh are lost.
 
 ![Cylinder Comparison Before and After Compression](img/cylinder_decimate_comparison.png)
 
@@ -46,7 +46,7 @@ The JavaScript library `three.js` [^9] provides useful tools for viewing 3D mode
 
 The file format we use for our 3D objects is the `GLTF` [^12] file format. `GLTF` is an open source 3D file format that is optimized for rendering in a web environment.
 
-The 3D model being used for testing is that of a `piperack` [^2]. The base file size is ~7MB; a relatively small 3D model. The model is loaded to the scene along with some lights, cameras, and spatial grid for reference.
+The 3D model being used for testing is that of a `Piperack` [^2]. The base file size is ~7MB; a relatively small 3D model. The model is loaded to the scene along with some lights, cameras, and spatial grid for reference.
 
 ![Scene with Model](img/background_with-model.png)
 
@@ -58,15 +58,15 @@ In `three.js`, LOD control is done using the `three.LOD` class [^10]. At a high 
 
 ![Foot model LOD version colored](img/human-foot-LOD-versions-color.png)
 
-These 3 meshes are loaded into one `LOD` container with distance thresholds of 10 units and 5 units from the camera. Now, zooming into the page changes the active mesh based on the specified distance thresholds[^7].
+These 3 meshes are loaded into one `LOD` container with distance thresholds of 10 units and 5 units from the camera. Now, zooming into the page changes the active mesh based on the specified distance thresholds [^7].
 
 ![Foot model LOD containers aligned and colors changed](img/foot-lod-pos-synced-color.gif)
 
-Let's extend this knowledge out to our `piperacks` model [^2].
+Let's extend this knowledge out to our `Piperack` model [^2].
 
 ## Per Object LOD in three.js
 
-In this section, we replicate our `LOD` results above to a larger 3D model with many more objects. The first step is to create a low-resolution version of the `piperack` [^2] model at 0.4 `decimate ratio`. For easy identification, the meshes are color coded- `low-res` meshes in `red` and `hi-res` meshes in `green`.
+In this section, we replicate our `LOD` results above to a larger 3D model with many more objects. The first step is to create a low-resolution version of the `Piperack` [^2] model at 0.4 `decimate ratio`. For easy identification, the meshes are color coded- `low-res` meshes in `red` and `hi-res` meshes in `green`.
 
 ![Per Object LOD Control Color Coded](img/per-object-lod-control-mesh-colors.png)
 
@@ -94,7 +94,7 @@ The complex geometry of the wellhead in the background is rendered in `low-res` 
 
 ![Performance Results of Main Piperack](img/performance-results-main-piperack.png)
 
-The main piperack of the scene is loaded dynamically- far away objects in `low-res` while near objects in `hi-res`. This will be on average, the compression capabilites that can be achieved in everyday use.
+The main Piperack of the scene is loaded dynamically- far away objects in `low-res` while near objects in `hi-res`. This will be on average, the compression capabilities that can be achieved in everyday use.
 
 The full explanation and in-depth analysis of results can be found in the body of knowledge [^8].
 
@@ -104,7 +104,7 @@ Out in the field, understanding information from drawings is key, and no spreads
 
 In further research, I will explore customizing the scene- changing colours, filtering for specific conditions, and running simulations. As well, I explore scaling up- identifying optimizations that can be made to further increase our file size, while limiting the effects on performance.
 
-You can find more information about my research on my [github](https://github.com/suryashch).
+You can find more information about this research on my [github](https://github.com/suryashch).
 
 ## Credits
 
@@ -128,7 +128,6 @@ You can find more information about my research on my [github](https://github.co
   author  = Suryash Chakravarty,
   year    = 2025,
   url     = https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_decimate.md
-
 
 [^4]: mean_pooling_on_mesh =
   title   = Mean Pooling Function on a 3D Model,
