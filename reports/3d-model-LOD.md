@@ -12,7 +12,7 @@ Through the optimizations in this project, I was able to achieve a peak `5x` imp
 
 The fundamental building blocks of 3D models are [`vertices` and `edges`](https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_decimate.md). `vertices` can be thought of as 'corners' while `edges` are what connect the corners to each other. In a cube, we have 8 `vertices` and 12 `edges`, as can be seen in the image below (in no praticular order).
 
-![cubes edges and vertices defined](img/cubes-edges-vertices.png)
+![cubes edges and vertices defined](img/cubes-edges-vertices.png){width=30%}
 
 As the total number of `vertices` and `edges` in the scene increase, so does the strain on the GPU and as a result, it becomes laggy when you try to move around. Reducing the number of `vertices` and `edges` in the scene will improve the performance.
 
