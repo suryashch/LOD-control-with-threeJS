@@ -4,7 +4,7 @@ In the construction industry, 3D models provide a level of visual context that s
 
 In this paper, I propose a proof of concept whereby 3D models can be hosted on any webpage and viewed on any device with a web browser- no dedicated software needed. I explore the basics of 3D modelling, mesh compression techniques, creating scenes in `three.js`, and swapping between different versions of a mesh depending on how far away the user is from the object.
 
-[The final scene](https://suryashch.github.io/3d_modelling/) contains 303 objects, each with a `low-res` and `hi-res` resolution version of their 3D mesh (red and green respectively), that dynamically render to the screen as the user zooms in.
+[The final scene](https://suryashch.github.io/3d_modelling/) contains 303 objects, each with a `low` and `hi` resolution version of their 3D mesh (red and green respectively), that dynamically render to the screen as the user zooms in.
 
 Through the optimizations in this project, I was able to achieve a peak `5x` improvement in GPU performance, and average `3.3x` improvement in webpage performance over the standard 3D model (measured via average frame rate and GPU triangle throughput), all while keeping draw calls constant. The full paper and research body of knowledge can be found [in the body of knowledge repo](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/per-object-lod-control-with-threejs.md).
 
