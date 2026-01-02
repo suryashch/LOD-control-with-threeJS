@@ -1,20 +1,3 @@
----
-title: "Improving 3D Model Performance With LOD Control"
-author: "Suryash Chakravarty"
-date: "2026/01/02"
-format: 
-  html:
-    toc: true
-    toc-depth: 3
-    embed-resources: true
-bibliography: references.bib
-execute:
-  echo: false
-  warning: false
-  message: false
-editor: source
----
-
 # Improving 3D Model Performance With LOD Control
 
 In the construction industry, 3D models provide a level of visual context that simply cannot be matched through spreadsheets. However, working with them often requires using specialized tools and heavy duty hardware. For quick mock-ups and visualizations, one such tool is often overlooked- the humble web browser.
@@ -23,17 +6,17 @@ In this paper, I propose a Proof of Concept whereby 3D models can be hosted on a
 
 [Our Final Scene](https://suryashch.github.io/3d_modelling/) contains 303 objects, each with a `low-res` and `hi-res` resolution version of their 3D mesh (red and green respectively), that dynamically renders to the screen as you zoom in.
 
-Through the optimizations in this project, I was able to achieve a peak `5x` improvement in GPU performance, and average `3.3x` improvement in webpage performance over the standard 3D model, all while keeping draw calls constant. The full paper and research body of knowledge can be found [here](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/per-object-lod-control-with-threejs.md) @per_obj_lod.
+Through the optimizations in this project, I was able to achieve a peak `5x` improvement in GPU performance, and average `3.3x` improvement in webpage performance over the standard 3D model, all while keeping draw calls constant. The full paper and research body of knowledge can be found [here](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/per-object-lod-control-with-threejs.md).
 
 ## 3D Modelling Basics
 
-The fundamental building blocks of 3D models are `vertices` and `edges` @analysis_decimate. `vertices` can be thought of as 'corners' while `edges` are what connect the corners to each other. In a cube, we have 8 `vertices` and 12 `edges`, as you can see in the image below (in no praticular order).
+The fundamental building blocks of 3D models are [`vertices` and `edges`](https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_decimate.md). `vertices` can be thought of as 'corners' while `edges` are what connect the corners to each other. In a cube, we have 8 `vertices` and 12 `edges`, as you can see in the image below (in no praticular order).
 
 ![cubes edges and vertices defined](img/cubes-edges-vertices.png)
 
 As the total number of `vertices` and `edges` in the scene increase, so does the strain on the GPU and as a result, it becomes laggy when you try to move around. Reducing the number of `vertices` and `edges` in the scene will improve the performance.
 
-One piece of geometry that often goes overlooked in construction models is the humble pipe- modelled as a cylinder. Circles don't have any corners- a circle can be thought of as infinitely many corners that all connect to each other. It is impossible to model a perfect circle, so we approximate it using a large number of `vertices`. The more `vertices`, the more the object starts looking like a circle.
+One piece of geometry that often goes overlooked in construction models is the piping- modelled as cylinders. Circles don't have any corners- a circle can be thought of as infinitely many corners that all connect to each other. It is impossible to model a perfect circle, so we approximate it using a large number of `vertices`. The more `vertices`, the more the object starts looking like a circle.
 
 Hence, when we extrude all these individual edges and vertices into the page, we get a cylinder (pipe), which is computationally inefficient for how fundamental of a shape it is.
 
@@ -45,15 +28,9 @@ Each one of these edges and vertices need to be kept track of by the computer's 
 
 The `density` of a mesh is a measure of how many individual `vertices` and `edges` exist within it. We can reduce the density of the mesh by removing some `vertices` from it. By removing these data points however, we trade density for details and as you see in the image below, the finer details of our mesh is lost.
 
-Before:
+![Cylinder Comparison Before and After Compression](img/cylinder_decimate_comparison.png)
 
-![Cylinder Example Before Decimation](img/cylinder.png)
-
-After:
-
-![Cylinder Example After Decimation](img/cylinder_decimated.png)
-
-One easy way to reduce the mesh density is using a technique called `Decimate` @analysis_decimate in Blender. This modifier will remove `edges` in a mesh upto a specified `ratio`, while maintaining the overall shape of the object. Here we run a test case of `decimating` a 3D mesh model of a human foot @human_foot_model upto a ratio of 0.1.
+One easy way to reduce the mesh density is using a technique called [`Decimate`](https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_decimate.md) in Blender. This modifier will remove `edges` in a mesh upto a specified `ratio`, while maintaining the overall shape of the object. Here we run a test case of `decimating` a 3D mesh model of a human foot [^1] upto a ratio of 0.1.
 
 ![Mesh model of human foot before and after compression](img/foot_comparison.png)
 
@@ -65,35 +42,35 @@ Both meshes look similar. **At far enough distances, mesh quality can be reduced
 
 ## Loading a 3D Model to a Webpage
 
-The JavaScript library `three.js` @three.js provides useful tools for viewing 3D models in a web-based environment. The basic concept behind `three.js` is to create a `scene`, and add objects to it, like `lights`, `cameras`, `backgrounds`, and of course, `3D objects` @hosting_3d_model.
+The JavaScript library `three.js` [^9] provides useful tools for viewing 3D models in a web-based environment. The basic concept behind `three.js` is to create a `scene`, and add objects to it, like `lights`, `cameras`, `backgrounds`, and of course, [`3D objects`](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/analysis_threejs.md).
 
-The file format we will be using for our 3D objects is the GLTF file format @hosting_3d_model. GLTF is an open source 3D file format that is optimized for rendering in a web environment.
+The file format we will be using for our 3D objects is the GLTF file format. GLTF is an open source 3D file format that is optimized for rendering in a web environment.
 
-The 3D model we will be working with is of a `piperack` @piperacks_model. The base file size is ~7MB, so definitely a small 3D model. We load it to our scene along with some lights, cameras, and spatial grid for reference.
+The 3D model we will be working with is of a `piperack` [^2]. The base file size is ~7MB, so definitely a small 3D model. We load it to our scene along with some lights, cameras, and spatial grid for reference.
 
 ![Scene with Model](img/background_with-model.png)
 
 ## Basic LOD in three.js
 
-LOD (Level of Detail) modelling involves creating low and high resolution meshes for each object in the scene, and dynamically rendering each one based on how far away the object is from the camera @superposing_models. This way, far-away objects can render in low-resolution, GPU-friendly mode, and near objects can render in their full high definition. Since the total number of `vertices` and `edges` are less in our `low-res` model, we can use this to improve the performance of our scene.
+LOD (Level of Detail) modelling involves creating low and high resolution meshes for each object in the scene, and dynamically rendering each one based on [how far the object is from the camera](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/analysis_superposing-models.md). This way, far-away objects can render in low-resolution, GPU-friendly mode, and near objects can render in their full high definition. Since the total number of `vertices` and `edges` are less in our `low-res` model, we can use this to improve the performance of our scene.
 
-In `three.js`, LOD control is done using the `three.LOD` class @three_lod. At a high level, a `LOD` can be thought of as a container that holds meshes. Based on some distance threshold, the `LOD` swaps which mesh is active at any time. In this example, we load 3 versions of our `human foot` @human_foot_model mesh- `hi-res`, `med-res`, and `low-res`, corresponding to 1, 0.4, and 0.1 `decimate ratios` respectively. The meshes have been coloured for identification purposes.
+In `three.js`, LOD control is done using the `three.LOD` class [^10]. At a high level, a `LOD` can be thought of as a container that holds meshes. Based on some distance threshold, the `LOD` swaps which mesh is active at any time. In this example, we load 3 versions of our `human foot` [^1] mesh- `hi-res`, `med-res`, and `low-res`, corresponding to 1, 0.4, and 0.1 `decimate ratios` respectively. The meshes have been coloured for identification purposes.
 
 ![Foot model LOD version colored](img/human-foot-LOD-versions-color.png)
 
-We load these 3 meshes into one `LOD` container and set distance thresholds of 10 units and 5 units from the camera. Now, as we zoom into the page, the active mesh changes at those specified distance thresholds @basic_lod_control.
+We load these 3 meshes into one `LOD` container and set distance thresholds of 10 units and 5 units from the camera. Now, as we zoom into the page, the active mesh changes at those [specified distance thresholds](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/basic-lod-control-with-threejs.md).
 
 ![Foot model LOD containers aligned and colors changed](img/foot-lod-pos-synced-color.gif)
 
-Let's extend this knowledge out to our `piperacks` model.
+Let's extend this knowledge out to our `piperacks` model [^2].
 
 ## Per Object LOD in three.js
 
-We would like to replicate our `LOD` results above to a larger 3D model with many more objects. We create a low-resolution version of our `piperack` model at 0.4 `decimate ratio`. We also colour our `low-res` meshes in `red` and `hi-res` meshes in `green`.
+We would like to replicate our `LOD` results above to a larger 3D model with many more objects. We create a low-resolution version of our `piperack` [^2] model at 0.4 `decimate ratio`. We also colour our `low-res` meshes in `red` and `hi-res` meshes in `green`.
 
 ![Per Object LOD Control Color Coded](img/per-object-lod-control-mesh-colors.png)
 
-Now, instead of loading our entire model, we need to loop through every object in the scene and for each one, save the `low-res` and `hi-res` meshes to one `LOD` container. This involves using a function called `.traverse()` @traverse. Naming of the objects in the scene here is key, as the name is what allows the traversal function to identify the low and high resolution meshes.
+Now, instead of loading our entire model, we need to loop through every object in the scene and for each one, save the `low-res` and `hi-res` meshes to one `LOD` container. This involves using a function called `.traverse()` [^11]. Naming of the objects in the scene here is key, as the name is what allows the traversal function to identify the low and high resolution meshes.
 
 We create a `Map()` to store key-value pairs. Each key in our map contains Object `name`, and the data associated with the high and low resolution mesh. Conceptually, this is what the scene tree looks like after traversing the model.
 
@@ -119,14 +96,91 @@ The complex geometry of the wellhead in the background is rendered in `low-res` 
 
 The main piperack of the scene is loaded dynamically- far away objects in `low-res` while near objects in `hi-res`. This will be on average, the compression capabilites that can be achieved in everyday use.
 
-The full explanation and in-depth analysis of results can be found [here] (https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/per-object-lod-control-with-threejs.md) @per_obj_lod.
+The full explanation and in-depth analysis of results can be found [in this file](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/per-object-lod-control-with-threejs.md).
 
 ## Conclusion
 
 Out in the field, understanding information from drawings is key, and no spreadsheet can compete with the spatial context provided by 3D models. However, a true lightweight, cross platform solution for visualization is lacking. Taking advantage of the web browser allows us to unlock new avenues for data transfer, and with recent advents in cloud computing, what used to be a traditionally computation-heavy resource is starting to look more attainable for the masses.
 
-In further research, I will explore customizability to the scene- changing colours, filtering for specific conditions, and running simulations. As well, I explore scaling up- identifying optimizations that can be made to further increase our file size, while limiting the effects on performance.
+In further research, I will explore customizing the scene- changing colours, filtering for specific conditions, and running simulations. As well, I explore scaling up- identifying optimizations that can be made to further increase our file size, while limiting the effects on performance.
 
 You can find more information about my research on my [github](https://github.com/suryashch).
 
 ## Credits
+
+1) human_foot_model = {
+  title        = {Human Foot Base Mesh},
+  author       = {ferrumiron6},
+  year         = {2025},
+  howpublished = {SketchFab},
+  url          = {https://sketchfab.com/3d-models/human-foot-base-mesh-b6dd50f7e87441dca79e24f8c702f84f}
+}
+
+2) piperacks_model = {
+  title        = {Pipe Racks Building Blocks Bundle},
+  author       = {The Learning Network},
+  year         = {2020},
+  howpublished = {Free3D},
+  url          = {https://free3d.com/3d-model/pipe-racks-building-blocks-bundle-2755.html?dd_referrer=},
+  note         = {{Royalty Free License}: https://free3d.com/royalty-free-license}
+}
+
+3) analysis_decimate = {
+  title   = {Reducing Mesh Density of 3D Objects in Blender},
+  author  = {Suryash Chakravarty},
+  year    = {2025},
+  url     = {https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_decimate.md}
+}
+
+4) mean_pooling_on_mesh = {
+  title   = {Mean Pooling Function on a 3D Model},
+  author  = {Suryash Chakravarty},
+  year    = {2025},
+  url     = {https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_mean-pooling-on-mesh.md}
+}
+
+5) hosting_3d_model = {
+  title   = {Hosting 3D models on a Website},
+  author  = {Suryash Chakravarty},
+  year    = {2025},
+  url     = {https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/analysis_threejs.md}
+}
+
+6) superposing_models = {
+  title   = {Superposing Models of Different LOD in a Web Based Environment},
+  author  = {Suryash Chakravarty},
+  year    = {2025},
+  url     = {https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/analysis_superposing-models.md}
+}
+
+7) basic_lod_control = {
+  title   = {Basic LOD Control with ThreeJS},
+  author  = {Suryash Chakravarty},
+  year    = {2025},
+  url     = {https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/basic-lod-control-with-threejs.md}
+}
+
+8) per_obj_lod = {
+  title   = {Per Object LOD Control With ThreeJS},
+  author  = {Suryash Chakravarty},
+  year    = {2025},
+  url     = {https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/per-object-lod-control-with-threejs.md}
+}
+
+9) three.js = {
+  title   = {three.js},
+  author  = {threejs.org},
+  url     = {https://threejs.org/docs/}
+}
+
+10) three_lod = {
+  title   = {three.LOD},
+  author  = {three.js},
+  url     = {https://threejs.org/docs/#LOD}
+}
+
+11) = traverse = {
+  title   = {three.object3d.traverse()},
+  author  = {three.js},
+  url     = {https://threejs.org/docs/#Object3D.traverse}
+}
