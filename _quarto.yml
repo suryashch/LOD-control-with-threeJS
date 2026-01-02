@@ -1,11 +1,12 @@
 project:
   type: website
+  output-dir: docs
 
 website:
   title: "LOD Control in ThreeJS"
   navbar:
     left:
-      - href: index.qmd
+      - href: reports/index.qmd
         text: Home
       - reports/3d-model-LOD.qmd
 
@@ -14,7 +15,7 @@ format:
     theme:
       - cosmo
       - brand
-    css: styles.css
+    css: public/styles.css
     toc: true
 
 
