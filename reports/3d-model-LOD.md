@@ -1,36 +1,38 @@
 # Improving 3D Model Performance With LOD Control
 
-In the construction industry, 3D models provide a level of visual context that simply cannot be matched through spreadsheets. However, working with them often requires specialized software and heavy-duty hardware. For quick mock-ups and visualizations, one such tool is often overlooked- the humble web browser.
+In the construction industry, 3D models provide a level of visual context that simply cannot be matched through spreadsheets. However, working with them often requires specialized software and heavy-duty hardware. For quick mock-ups and visualizations sometimes all you need is one readily availabe tool- the web browser.
 
-In this paper, I propose a proof of concept whereby 3D models can be hosted on any webpage and viewed on any device with a web browser- no dedicated software needed. I explore the basics of 3D modelling, mesh compression techniques, creating scenes in `three.js`, and swapping between different versions of a mesh depending on how far away the user is from the object.
+In this paper, I propose a proof of concept whereby 3D models can be hosted and shared on any webpage and viewed on any device with a web browser- no dedicated software needed. I explore the basics of 3D modelling, mesh compression techniques, creating scenes in `three.js`, and swapping between different versions of a mesh depending on how far away the user is from the object.
 
 [The final scene](https://suryashch.github.io/3d_modelling/) contains 303 objects, each with a `low` and `hi` resolution version of their 3D mesh (red and green respectively), that dynamically render to the screen as the user zooms in.
 
-Through the optimizations in this project, I was able to achieve a peak `5x` improvement in GPU performance, and average `3.3x` improvement in webpage performance over the standard 3D model (measured via average frame rate and GPU triangle throughput), all while keeping draw calls constant. The full paper and research body of knowledge can be found [in this repo](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/per-object-lod-control-with-threejs.md).
+![Working LOD Controlled Model](img/first-working-lod-model.gif)
+
+Through the optimizations in this project, I was able to achieve an average `3x` improvement in GPU performance (peak `5x`, measured using number of `triangles`), while keeping draw calls constant. The [full code](https://github.com/suryashch/LOD-control-with-threeJS) and [research body of knowledge](https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/per-object-lod-control-with-threejs.md) provide additional details to those interested.
 
 ## 3D Modelling Basics
 
-The fundamental building blocks of 3D models are `vertices`, `edges` and `faces` (typically triangles)[^3]. `vertices` can be thought of as 'corners' while `edges` are what connect the corners to each other. Multiple edges combine to make a loop, known as a `face`. In a cube, we have 8 `vertices` (in black) and 12 `edges` (in red), as can be seen in the image below (in no particular order).
+The fundamental building blocks of 3D models are `vertices` and `edges`[^3]. `vertices` can be thought of as 'corners' while `edges` are what connect the corners to each other. In a cube, we have 8 `vertices` (in black) and 12 `edges` (in red), as can be seen in the image below (in no particular order).
 
 ![cubes edges and vertices defined](img/cubes-edges-vertices.png)
 
 As the total number of `vertices` and `edges` in the scene increase, so does the strain on the GPU and as a result, it becomes laggy when you try to move around. Reducing the number of `vertices` and `edges` in the scene will improve the performance.
 
-One piece of geometry that often goes overlooked in construction models is Piping- modelled as cylinders. Circles don't have any corners- a circle can be thought of as infinitely many corners that all connect to each other. It is impossible to model a perfect circle, so it is approximated using a large number of `vertices`. The more `vertices`, the more the object starts looking like a circle.
+A piece of geometry that is omnipresent in construction models is the pipe, modelled as a cylinder. Circles don't have any corners- a circle can be thought of as infinitely many corners that all connect to each other. It is impossible to model a perfect circle, so it is approximated using a large number of `vertices`. The more `vertices`, the more the object starts looking like a circle.
 
-Hence, when we extrude all these individual edges and vertices into the page, we get a cylinder (pipe), which is computationally inefficient for how fundamental of a shape it is.
+Hence, when we extrude all these individual edges and vertices into the page, we get a cylinder (pipe), which is highly inefficient for how fundamental of a shape it is.
 
 ![Cylinder Vertices and Edges](img/cylinder.png)
 
-Each one of these edges and vertices need to be kept track of by the computer's GPU. In large models, this is usually what causes the lag. Reducing the density of the mesh is one way to reduce the strain on the GPU.
+Each one of these edges and vertices need to be kept track of by the computer's GPU, per pipe. In large models, this is usually what causes the lag. Reducing the density of the pipe mesh is one way to improve the performance of our final `scene`.
 
 ## Reducing the Density of the Mesh
 
-The `density` of a mesh is a measure of how many individual `vertices` and `edges` exist within it. The density of the mesh can be reduced by removing some `vertices` from it. By removing these data points however, we sacrifice on details and as can be seen in the image below- the finer details of the mesh are lost.
+The density of a mesh is a measure of how many individual `vertices` and `edges` exist within it. The density of the mesh can be reduced by removing some `vertices` from it. By removing these data points however, we sacrifice on details and as can be seen in the image below- the finer details of the mesh are lost.
 
 ![Cylinder Comparison Before and After Compression](img/cylinder_decimate_comparison.png)
 
-One easy way to reduce the mesh density is using a technique called `Decimate` [^3] in Blender. This modifier will remove `edges` in a mesh upto a specified `ratio`, while maintaining the overall shape of the object. The results below show a test case of `decimating` a 3D mesh model of a human foot [^1] upto a ratio of 0.1.
+One easy way to reduce the mesh density is using a technique called `Decimate` [^3] in Blender [^13]. This modifier will remove `edges` in a mesh upto a specified `ratio`, while maintaining the overall shape of the object. The results below show a test case of `decimating` a 3D mesh model of a human foot [^1] upto a ratio of 0.1.
 
 ![Mesh model of human foot before and after compression](img/foot_comparison.png)
 
@@ -38,11 +40,11 @@ The mesh has lost a lot of visual quality. But, if we zoom out far enough-
 
 ![Mesh models of human foot zoomed out to show similarities](img/foot_comparison_zoomed.png)
 
-Both meshes look similar. **At far enough distances, mesh quality can be reduced with limited change to visual context.**
+Both meshes look similar. **At far enough distances, mesh quality can be reduced with limited change to visual context.** A `scene` that dynamically changes quality if the user is near or far may potentially impove performance.
 
 ## Loading a 3D Model to a Webpage
 
-The JavaScript library `three.js` [^9] provides useful tools for viewing 3D models in a web-based environment. The basic concept behind `three.js` is to create a `scene`, and add objects to it, like `lights`, `cameras`, `backgrounds`, and of course, `3D objects`[^5].
+The JavaScript library `three.js` [^9] provides useful tools for viewing 3D models in a web-based environment. The basic concept behind `three.js` is to create a `scene` and add objects to it, like `lights`, `cameras`, `backgrounds`, and of course, `3D objects`[^5].
 
 The file format we use for our 3D objects is the `GLTF` [^12] file format. `GLTF` is an open source 3D file format that is optimized for rendering in a web environment.
 
@@ -76,11 +78,11 @@ A `Map()` object is used to store key-value pairs. Each key in the map contains 
 
 ![Working Scene Tree](img/scene-tree-working.png)
 
-Each object in the scene is saved to one `LOD` container, and each container contains 2 meshes.
+Each object in the scene is saved to one `LOD` container, and each container contains 2 meshes. The meshes are triggered to change at a distance of 5 units.
 
 Now upon loading the `LOD` model to the scene, this is what we're greeted with.
 
-![Working LOD Controlled Model](img/first-working-lod-model.gif)
+![Fnal LOD Controlled Model](img/refined-lod-model.gif)
 
 The initial load shows all objects rendered in `low-res` mode. Zooming in to specific objects causes them to render in `hi-res`. We measure the performance of the scene against 3 main metrics- `draw calls` (proxy for CPU usage), `triangles` (proxy for GPU usage), and `memory`. Here are some key results.
 
@@ -96,11 +98,11 @@ The complex geometry of the wellhead in the background is rendered in `low-res` 
 
 The main Piperack of the scene is loaded dynamically- far away objects in `low-res` while near objects in `hi-res`. This will be on average, the compression capabilities that can be achieved in everyday use.
 
-The full explanation and in-depth analysis of results can be found in the body of knowledge [^8].
+The full explanation and in-depth analysis of results can be found in this repo [^8].
 
 ## Conclusion
 
-Out in the field, understanding information from drawings is key, and no spreadsheet can compete with the spatial context provided by 3D models. However, a true lightweight, cross platform solution for visualization is lacking. Taking advantage of the web browser allows us to unlock new avenues for data transfer, and with recent advents in cloud computing, what used to be a traditionally computation-heavy resource is starting to look more attainable for the masses.
+Out in the field, understanding information from drawings is key, and no spreadsheet can compete with the spatial context provided by 3D models. However, a true lightweight, cross platform solution for visualization is lacking. Taking advantage of the web browser allows us to unlock new avenues for data transfer, such as dashboards and data pipelines. With recent advents in cloud computing, what used to be a traditionally computation-heavy resource is starting to look more attainable for the masses.
 
 In further research, I will explore customizing the scene- changing colours, filtering for specific conditions, and running simulations. As well, I explore scaling up- identifying optimizations that can be made to further increase our file size, while limiting the effects on performance.
 
@@ -122,28 +124,14 @@ You can find more information about this research on my [github](https://github.
 
 [^7]: basic_lod_control https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/basic-lod-control-with-threejs.md
 
-[^8]: per_obj_lod =
-  title   = Per Object LOD Control With ThreeJS,
-  author  = Suryash Chakravarty,
-  year    = 2025,
-  url     = https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/per-object-lod-control-with-threejs.md
+[^8]: per_obj_lod https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/per-object-lod-control-with-threejs.md
 
-[^9]: three.js =
-  title   = three.js,
-  author  = threejs.org,
-  url     = https://threejs.org/docs/
+[^9]: three.js https://threejs.org/docs/
 
-[^10]: three_lod =
-  title   = three.LOD,
-  author  = three.js,
-  url     = https://threejs.org/docs/#LOD
+[^10]: three_lod https://threejs.org/docs/#LOD
 
-[^11]: traverse =
-  title   = three.object3d.traverse(),
-  author  = three.js,
-  url     = https://threejs.org/docs/#Object3D.traverse
+[^11]: three.object3d.traverse() https://threejs.org/docs/#Object3D.traverse
 
-[^12]: gltf =
-  title   = gltf,
-  author  = Khronos Group,
-  url     = https://www.khronos.org/Gltf
+[^12]: gltf https://www.khronos.org/Gltf
+
+[^13]: blender https://www.blender.org/
