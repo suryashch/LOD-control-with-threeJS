@@ -104,7 +104,7 @@ The full explanation and in-depth analysis of results can be found in this repo 
 
 Out in the field, understanding information from drawings is key, and no spreadsheet can compete with the spatial context provided by 3D models. However, a true lightweight, cross platform solution for 3D visualization is lacking. Taking advantage of the web browser unlocks a readily availble tool whose output can be integrated into existing data pipelines and dashboards. With recent advances in cloud computing, what used to be a traditionally computation-heavy resource is starting to look more attainable for the masses.
 
-In further research, I explore customizing the scene- changing colours, filtering for specific conditions, and running simulations. As well, I explore scaling up- identifying optimizations that can be made to further increase our file size, while limiting the effects on performance.
+In further research, I explore customizing the scene- changing colours, filtering for specific conditions, and running simulations. As well, I explore scaling up- identifying optimizations that can be made to further increase our max file size, while limiting the effects on performance.
 
 You can find more information about this research on my [github](https://github.com/suryashch/3d_modelling).
 
