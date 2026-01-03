@@ -39,6 +39,7 @@ For complex scenes (e.g., the 303-object Piperack), the system uses the .travers
 
 📊 Performance Metrics
 
+
 | Metric |Improvement (Avg) | Peak Improvement |
 | Triangles (GPU) | 3x Reduction | 5x Reduction |
 | Draw Calls (CPU) | Constant | - |
