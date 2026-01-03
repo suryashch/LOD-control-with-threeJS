@@ -1,6 +1,6 @@
 # Improving 3D Model Performance With LOD Control
 
-In the construction industry, 3D models provide a level of visual context that simply cannot be matched through spreadsheets. However, working with them often requires specialized software and heavy-duty hardware. For quick mock-ups and visualizations sometimes all you need is one readily availabe tool- the web browser.
+In the construction industry, 3D models provide a level of visual context that simply cannot be matched through spreadsheets. However, working with them often requires specialized software and heavy-duty hardware. For quick mock-ups and visualizations sometimes all you need is one readily available tool- the web browser.
 
 In this paper, I propose a proof of concept whereby 3D models can be hosted and shared on any webpage and viewed on any device with a web browser- no dedicated software needed. I explore the basics of 3D modelling, mesh compression techniques, creating scenes in `three.js`, and swapping between different versions of a mesh depending on how far away the user is from the object.
 
