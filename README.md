@@ -39,6 +39,7 @@ For complex scenes with multiple objects, the system uses the .traverse() functi
 
 📊 Performance Metrics
 
+
 | Metric |Improvement (Avg) | Peak Improvement |
 | Triangles (GPU) | 3x Reduction | 5x Reduction |
 | Draw Calls (CPU) | Constant | - |
