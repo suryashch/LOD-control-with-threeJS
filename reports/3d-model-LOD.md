@@ -92,11 +92,11 @@ At a high level 50ft view, only the `low-res` version of the model is active. He
 
 ![Performance Results West End of Piperack](img/performance-results-westend-of-piperack.png)
 
-The complex geometry of the wellhead in the background is rendered in `low-res` in the dynamic model, significantly reducing the number of `triangles` being tracked by the GPU.
+In this shot, the complex geometry of the wellhead in the background is rendered in `low-res` in the dynamic model, significantly reducing the number of `triangles` being tracked by the GPU (~4x improvement).
 
 ![Performance Results of Main Piperack](img/performance-results-main-piperack.png)
 
-The main Piperack of the scene is loaded dynamically- far away objects in `low-res` while near objects in `hi-res`. This will be on average, the compression capabilities that can be achieved in everyday use.
+The main Piperack of the scene is loaded dynamically- far away objects in `low-res` while near objects in `hi-res`. This will be on average, the compression capabilities that can be achieved in everyday use, at roughly 3x improvement.
 
 The full explanation and in-depth analysis of results can be found in this repo [^8].
 
