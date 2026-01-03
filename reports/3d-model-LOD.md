@@ -106,52 +106,21 @@ In further research, I will explore customizing the scene- changing colours, fil
 
 You can find more information about this research on my [github](https://github.com/suryashch).
 
-## Credits
+## Links
 
-[^1]: human_foot_model =
-  title        = Human Foot Base Mesh,
-  author       = ferrumiron6,
-  year         = 2025,
-  howpublished = SketchFab,
-  url          = https://sketchfab.com/3d-models/human-foot-base-mesh-b6dd50f7e87441dca79e24f8c702f84f
+[^1]: human_foot_model https://sketchfab.com/3d-models/human-foot-base-mesh-b6dd50f7e87441dca79e24f8c702f84f
 
-[^2]: piperacks_model =
-  title        = Pipe Racks Building Blocks Bundle,
-  author       = The Learning Network,
-  year         = 2020,
-  howpublished = Free3D,
-  url          = https://free3d.com/3d-model/pipe-racks-building-blocks-bundle-2755.html?dd_referrer=,
-  note         = Royalty Free License: https://free3d.com/royalty-free-license
+[^2]: piperacks_model https://free3d.com/3d-model/pipe-racks-building-blocks-bundle-2755.html?dd_referrer=
 
-[^3]: analysis_decimate =
-  title   = Reducing Mesh Density of 3D Objects in Blender,
-  author  = Suryash Chakravarty,
-  year    = 2025,
-  url     = https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_decimate.md
+[^3]: analysis_decimate https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_decimate.md
 
-[^4]: mean_pooling_on_mesh =
-  title   = Mean Pooling Function on a 3D Model,
-  author  = Suryash Chakravarty,
-  year    = 2025,
-  url     = https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_mean-pooling-on-mesh.md
+[^4]: mean_pooling_on_mesh https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_mean-pooling-on-mesh.md
 
-[^5]: hosting_3d_model =
-  title   = Hosting 3D models on a Website,
-  author  = Suryash Chakravarty,
-  year    = 2025,
-  url     = https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/analysis_threejs.md
+[^5]: hosting_3d_model https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/analysis_threejs.md
 
-[^6]: superposing_models =
-  title   = Superposing Models of Different LOD in a Web Based Environment,
-  author  = Suryash Chakravarty,
-  year    = 2025,
-  url     = https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/analysis_superposing-models.md
+[^6]: superposing_models https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/analysis_superposing-models.md
 
-[^7]: basic_lod_control =
-  title   = Basic LOD Control with ThreeJS,
-  author  = Suryash Chakravarty,
-  year    = 2025,
-  url     = https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/basic-lod-control-with-threejs.md
+[^7]: basic_lod_control https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/basic-lod-control-with-threejs.md
 
 [^8]: per_obj_lod =
   title   = Per Object LOD Control With ThreeJS,
