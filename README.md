@@ -35,15 +35,15 @@ Using the three.LOD class, multiple versions of the same object are loaded into 
 3. Per-Object Traversal
 
 For complex scenes (e.g., the 303-object Piperack), the system uses the .traverse() function to loop through the scene graph. A Map() object stores object names and their corresponding mesh resolutions, allowing for automated LOD assignment across large-scale models.
-
 ---
+
 📊 Performance Metrics
 
 | Metric |Improvement (Avg) | Peak Improvement |
 | Triangles (GPU) | 3x Reduction | 5x Reduction |
 | Draw Calls (CPU) | Constant | - |
-
 ---
+
 📂 Repository Structure
 
     [/scripts](scripts/): Contains the core three.js implementation and logic.
@@ -51,6 +51,7 @@ For complex scenes (e.g., the 303-object Piperack), the system uses the .travers
     [reports/img](reports/img/): Documentation assets and performance comparison captures.
 
     [reports/per-object-lod-control-with-threejs.md](reports/3d-model-LOD.md): The full research paper and technical breakdown.
+---
 
 🔧 Getting Started
 
@@ -60,4 +61,4 @@ For complex scenes (e.g., the 303-object Piperack), the system uses the .travers
 
     Open index.html: Navigate to the local address in any modern browser.
 
-Summary provided by Google Gemini.
+* Summary provided by Google Gemini.
