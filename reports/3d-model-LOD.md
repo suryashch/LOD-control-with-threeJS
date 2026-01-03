@@ -12,7 +12,7 @@ Through the optimizations in this project, I was able to achieve an average `3x`
 
 ## 3D Modelling Basics
 
-The fundamental building blocks of 3D models are `vertices` and `edges`[^3]. `vertices` can be thought of as 'corners' while `edges` are what connect the corners to each other. In a cube, we have 8 `vertices` (in black) and 12 `edges` (in red), as can be seen in the image below (in no particular order).
+The fundamental building blocks of 3D models are `vertices` and `edges`[^3]. `vertices` can be thought of as 'corners' while `edges` are what connect the corners to each other. In a cube, we have 8 `vertices` (in black) and 12 `edges` (in red), as seen in the image below (in no particular order).
 
 ![cubes edges and vertices defined](img/cubes-edges-vertices.png)
 
@@ -54,7 +54,7 @@ The 3D model being used for testing is that of a `Piperack` [^2]. The base file 
 
 ## Basic LOD in three.js
 
-LOD (Level of Detail) modelling involves creating low and high resolution meshes for each object in the scene, and dynamically rendering each one based on how far the object is from the camera [^6]. This way, far-away objects can render in low-resolution, GPU-friendly mode, and near objects can render in their full high definition. Since the total number of `vertices` and `edges` are less in the `low-res` model, switching to these meshes when they are a certain distance away will improve the performance of the scene.
+LOD (Level of Detail) modelling involves creating low and high resolution meshes for each object in the scene, and dynamically rendering each one based on how far the object is from the camera [^6]. This way, far-away objects can render in low-resolution, GPU-friendly mode, and near objects can render in their full high definition. Since the total number of `vertices` and `edges` are less in the `low-res` model, switching to these meshes when they are a certain distance away will reduce the straing on the GPU.
 
 In `three.js`, LOD control is done using the `three.LOD` class [^10]. At a high level, a `LOD` can be thought of as a container that holds meshes. Based on some distance threshold, the `LOD` swaps which mesh is active at any time. In this example, 3 versions of the `human foot` [^1] mesh are created- `hi-res`, `med-res`, and `low-res`, corresponding to 1, 0.4, and 0.1 `decimate ratios` respectively. The meshes have been coloured for identification purposes.
 
