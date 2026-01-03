@@ -42,11 +42,11 @@ The goal is to eliminate the need for heavy-duty software in construction visual
 
 📂 Repository Structure
 
-    [/scripts](scripts/): Contains the core three.js implementation and logic.
+[/scripts](scripts/): Contains the core three.js implementation and logic.
 
-    [reports/img](reports/img/): Documentation assets and performance comparison captures.
+[/reports/img](reports/img/): Documentation assets and performance comparison captures.
 
-    [reports/per-object-lod-control-with-threejs.md](reports/3d-model-LOD.md): The full research paper and technical breakdown.
+[/reports/3d-model-LOD.md](reports/3d-model-LOD.md): The full research paper and technical breakdown.
 ---
 
 🔧 Getting Started
