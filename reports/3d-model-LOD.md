@@ -16,15 +16,15 @@ The fundamental building blocks of 3D models are `vertices` and `edges`[^3]. `ve
 
 ![cubes edges and vertices defined](img/cubes-edges-vertices.png)
 
-As the total number of `vertices` and `edges` in the scene increase, so does the strain on the GPU and as a result, it becomes laggy when you try to move around. Reducing the number of `vertices` and `edges` in the scene will improve the performance.
+As the total number of `vertices` and `edges` in the scene increase, so does the strain on the GPU and as a result, it becomes laggy when you try to move around. Increasing the total number of `vertices` and `edges` in the scene also increases the workload for your computer.
 
-A piece of geometry that is omnipresent in construction models is the pipe, modelled as a cylinder. Circles don't have any corners- a circle can be thought of as infinitely many corners that all connect to each other. It is impossible to model a perfect circle, so it is approximated using a large number of `vertices`. The more `vertices`, the more the object starts looking like a circle.
+A piece of geometry that is omnipresent in construction models is the pipe, modelled as a cylinder. However, circles don't have any corners- a circle can be thought of as infinitely many corners that all connect to each other. It is impossible to model a perfect circle, so it is approximated using a large number of `vertices`. The more `vertices`, the more the object starts looking like a circle.
 
-Hence, when we extrude all these individual edges and vertices into the page, we get a cylinder (pipe), which is highly inefficient for how fundamental of a shape it is.
+Hence, when we extrude all these individual data points into the page, we get a cylinder (pipe), which is highly inefficient for how fundamental of a shape it is.
 
 ![Cylinder Vertices and Edges](img/cylinder.png)
 
-Each one of these edges and vertices need to be kept track of by the computer's GPU, per pipe. In large models, this is usually what causes the lag. Reducing the density of the pipe mesh is one way to improve the performance of our final `scene`.
+Each one of these edges and vertices need to be kept track of by the computer's GPU, per pipe. **If not properly optimized, a single pipe in your model may contain as many data points as the entire building's structural frame.** Reducing the density of the pipe mesh is a quick way to improve the performance of our final `scene`.
 
 ## Reducing the Density of the Mesh
 
@@ -32,7 +32,7 @@ The density of a mesh is a measure of how many individual `vertices` and `edges`
 
 ![Cylinder Comparison Before and After Compression](img/cylinder_decimate_comparison.png)
 
-One easy way to reduce the mesh density is using a technique called `Decimate` [^3] in Blender [^13]. This modifier will remove `edges` in a mesh upto a specified `ratio`, while maintaining the overall shape of the object. The results below show a test case of `decimating` a 3D mesh model of a human foot [^1] upto a ratio of 0.1.
+One easy way to reduce the mesh density is using a technique called `Decimate` [^3] in Blender [^13]. This modifier will remove `edges` in a mesh upto a specified `ratio`, while maintaining the overall shape of the object. The results below show a test case of `decimating` a 3D mesh model of a human foot [^1] up to a ratio of 0.1.
 
 ![Mesh model of human foot before and after compression](img/foot_comparison.png)
 
@@ -54,7 +54,7 @@ The 3D model being used for testing is that of a `Piperack` [^2]. The base file 
 
 ## Basic LOD in three.js
 
-LOD (Level of Detail) modelling involves creating low and high resolution meshes for each object in the scene, and dynamically rendering each one based on how far the object is from the camera [^6]. This way, far-away objects can render in low-resolution, GPU-friendly mode, and near objects can render in their full high definition. Since the total number of `vertices` and `edges` are less in the `low-res` model, switching to these meshes when they are a certain distance away will reduce the straing on the GPU.
+LOD (Level of Detail) modelling involves creating low and high resolution meshes for each object in the scene, and dynamically rendering each one based on how far the object is from the camera [^6]. This way, far-away objects can render in `low-res` and near objects can render in their full high definition. Since the total number of `vertices` and `edges` are less in the `low-res` model, switching to these meshes when they are a certain distance away will reduce the strain on the GPU.
 
 In `three.js`, LOD control is done using the `three.LOD` class [^10]. At a high level, a `LOD` can be thought of as a container that holds meshes. Based on some distance threshold, the `LOD` swaps which mesh is active at any time. In this example, 3 versions of the `human foot` [^1] mesh are created- `hi-res`, `med-res`, and `low-res`, corresponding to 1, 0.4, and 0.1 `decimate ratios` respectively. The meshes have been coloured for identification purposes.
 
@@ -68,11 +68,11 @@ Let's extend this knowledge out to our `Piperack` model [^2].
 
 ## Per Object LOD in three.js
 
-In this section, we replicate our `LOD` results above to a larger 3D model with many more objects. The first step is to create a low-resolution version of the `Piperack` [^2] model at 0.4 `decimate ratio`. For easy identification, the meshes are color coded- `low-res` meshes in `red` and `hi-res` meshes in `green`.
+In this section, we replicate our `LOD` results above to a larger 3D model with many more objects. The first step is to create a low-resolution version of the `Piperack` [^2] model at 0.4 `decimate ratio`. For easy identification, the meshes are color coded- `low-res` meshes in `red` and `hi-res` meshes in `green`. Both versions of the model are overlayed in the same file.
 
 ![Per Object LOD Control Color Coded](img/per-object-lod-control-mesh-colors.png)
 
-Creating the LODs involves looping through the scene and for each object, saving the `low-res` and `hi-res` meshes to one `LOD` container. This process utilizes a function called `.traverse()` [^11]. Naming of the objects in the scene here is key, as the name is what allows the traversal function to identify the low and high resolution meshes.
+Creating the LODs involves looping through the scene and for each object, saving the `low-res` and `hi-res` meshes to one `LOD` container. This process utilizes a function called `.traverse()` [^11]. Naming of the objects in the scene here is key, as the name enables the traversal function to identify the low and high resolution meshes.
 
 A `Map()` object is used to store key-value pairs. Each key in the map contains the Object `name`, and data associated with the high and low resolution mesh. Conceptually, this is what the scene tree looks like after traversing the model.
 
@@ -84,7 +84,7 @@ Now upon loading the `LOD` model to the scene, this is what we're greeted with.
 
 ![Fnal LOD Controlled Model](img/refined-lod-model.gif)
 
-The initial load shows all objects rendered in `low-res` mode. Zooming in to specific objects causes them to render in `hi-res`. We measure the performance of the scene against 3 main metrics- `draw calls` (proxy for CPU usage), `triangles` (proxy for GPU usage), and `memory`. Here are some key results.
+The initial load shows all objects rendered in `low-res` mode. Zooming in to specific objects causes them to render in `hi-res`. We measure the performance of the scene against 2 main metrics- `draw calls` (proxy for CPU usage) and `triangles` (proxy for GPU usage). Here are some key results.
 
 ![Performance Results 50ft View](img/performance-results-50ft-view.png)
 
@@ -102,9 +102,9 @@ The full explanation and in-depth analysis of results can be found in this repo 
 
 ## Conclusion
 
-Out in the field, understanding information from drawings is key, and no spreadsheet can compete with the spatial context provided by 3D models. However, a true lightweight, cross platform solution for visualization is lacking. Taking advantage of the web browser allows us to unlock new avenues for data transfer, such as dashboards and data pipelines. With recent advents in cloud computing, what used to be a traditionally computation-heavy resource is starting to look more attainable for the masses.
+Out in the field, understanding information from drawings is key, and no spreadsheet can compete with the spatial context provided by 3D models. However, a true lightweight, cross platform solution for 3D visualization is lacking. Taking advantage of the web browser unlocks a readily availble tool whose output can be integrated into existing data pipelines and dashboards. With recent advances in cloud computing, what used to be a traditionally computation-heavy resource is starting to look more attainable for the masses.
 
-In further research, I will explore customizing the scene- changing colours, filtering for specific conditions, and running simulations. As well, I explore scaling up- identifying optimizations that can be made to further increase our file size, while limiting the effects on performance.
+In further research, I explore customizing the scene- changing colours, filtering for specific conditions, and running simulations. As well, I explore scaling up- identifying optimizations that can be made to further increase our file size, while limiting the effects on performance.
 
 You can find more information about this research on my [github](https://github.com/suryashch/3d_modelling).
 
@@ -115,8 +115,6 @@ You can find more information about this research on my [github](https://github.
 [^2]: piperacks_model https://free3d.com/3d-model/pipe-racks-building-blocks-bundle-2755.html?dd_referrer=
 
 [^3]: analysis_decimate https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_decimate.md
-
-[^4]: mean_pooling_on_mesh https://github.com/suryashch/3d_modelling/blob/main/reducing-mesh-density/analysis_mean-pooling-on-mesh.md
 
 [^5]: hosting_3d_model https://github.com/suryashch/3d_modelling/blob/main/hosting-3d-model/analysis_threejs.md
 
