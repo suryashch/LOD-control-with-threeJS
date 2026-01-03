@@ -4,6 +4,7 @@ This repository provides a proof-of-concept for hosting and viewing complex 3D m
 
 ![LOD Controlled Model](reports/img/first-working-lod-model.gif)
 
+---
 🚀 Overview
 
 The goal is to eliminate the need for heavy-duty software in construction visualization. By implementing dynamic mesh swapping in three.js, this project enables:
@@ -13,6 +14,7 @@ The goal is to eliminate the need for heavy-duty software in construction visual
 - Cross-platform accessibility via standard web browsers.
 
 [View Live Demo](https://suryashch.github.io/LOD-control-with-threeJS/)
+---
 
 🛠️ Key Technical Concepts
 
@@ -34,12 +36,14 @@ Using the three.LOD class, multiple versions of the same object are loaded into 
 
 For complex scenes (e.g., the 303-object Piperack), the system uses the .traverse() function to loop through the scene graph. A Map() object stores object names and their corresponding mesh resolutions, allowing for automated LOD assignment across large-scale models.
 
+---
 📊 Performance Metrics
 
 | Metric |Improvement (Avg) | Peak Improvement |
 | Triangles (GPU) | 3x Reduction | 5x Reduction |
 | Draw Calls (CPU) | Constant | - |
 
+---
 📂 Repository Structure
 
     [/scripts](scripts/): Contains the core three.js implementation and logic.
