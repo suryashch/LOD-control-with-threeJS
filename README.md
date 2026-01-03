@@ -5,7 +5,8 @@ This repository provides a proof-of-concept for hosting and viewing complex 3D m
 ![LOD Controlled Model](reports/img/first-working-lod-model.gif)
 
 ---
-🚀 Overview
+
+## 🚀 Overview
 
 The goal is to eliminate the need for heavy-duty software in construction visualization. By implementing dynamic mesh swapping in three.js, this project enables:
 
@@ -14,9 +15,10 @@ The goal is to eliminate the need for heavy-duty software in construction visual
 - Cross-platform accessibility via standard web browsers.
 
 [View Live Demo](https://suryashch.github.io/LOD-control-with-threeJS/)
+
 ---
 
-🛠️ Key Technical Concepts
+## 🛠️ Key Technical Concepts
 
 1. Mesh Density & Optimization: 3D models are composed of vertices (points) and edges (connections). Complex geometries, specifically cylinders (pipes) common in construction, are heavy on GPU resources due to high vertex counts.
 
@@ -29,27 +31,30 @@ The goal is to eliminate the need for heavy-duty software in construction visual
 - Low-Res (Red): Rendered to screen when the camera moves beyond a specific distance threshold.
 
 3. Per-Object Traversal: For complex scenes with multiple objects, the system uses the .traverse() function to loop through the scene graph. A Map() object stores object names and their corresponding mesh resolutions, allowing for automated LOD assignment across large-scale models.
+
 ---
 
-📊 Performance Metrics
+## 📊 Performance Metrics
 
 
 | Metric | Improvement (Avg) | Peak Improvement |
 | --- | --- | --- |
 | Triangles (GPU) | 3x Reduction | 5x Reduction |
 | Draw Calls (CPU) | Constant | - |
+
 ---
 
-📂 Repository Structure
+## 📂 Repository Structure
 
 [/scripts](scripts/): Contains the core three.js implementation and logic.
 
 [/reports/img](reports/img/): Documentation assets and performance comparison captures.
 
 [/reports/3d-model-LOD.md](reports/3d-model-LOD.md): The full research paper and technical breakdown.
+
 ---
 
-🔧 Getting Started
+## 🔧 Getting Started
 
     Clone the repo: git clone https://github.com/suryashch/LOD-control-with-threeJS
 
