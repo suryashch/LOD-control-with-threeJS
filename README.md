@@ -18,29 +18,24 @@ The goal is to eliminate the need for heavy-duty software in construction visual
 
 🛠️ Key Technical Concepts
 
-1. Mesh Density & Optimization
-
-3D models are composed of vertices (points) and edges (connections). Complex geometries, specifically cylinders (pipes) common in construction, are heavy on GPU resources due to high vertex counts.
+1. Mesh Density & Optimization: 3D models are composed of vertices (points) and edges (connections). Complex geometries, specifically cylinders (pipes) common in construction, are heavy on GPU resources due to high vertex counts.
 
 - Decimation: Used Blender's Decimate modifier to reduce mesh density while preserving the overall shape.
 - Distance-Based Perception: At significant distances, the human eye cannot distinguish between a high-poly and low-poly mesh. This project exploits this by reducing quality for distant objects.
 
-2. Level of Detail (LOD) Implementation
-
-Using the three.LOD class, multiple versions of the same object are loaded into a single container.
+2. Level of Detail (LOD) Implementation: Using the three.LOD class, multiple versions of the same object are loaded into a single container.
 
 - Hi-Res (Green): Rendered to screen when the camera is close.
 - Low-Res (Red): Rendered to screen when the camera moves beyond a specific distance threshold.
 
-3. Per-Object Traversal
-
-For complex scenes with multiple objects, the system uses the .traverse() function to loop through the scene graph. A Map() object stores object names and their corresponding mesh resolutions, allowing for automated LOD assignment across large-scale models.
+3. Per-Object Traversal: For complex scenes with multiple objects, the system uses the .traverse() function to loop through the scene graph. A Map() object stores object names and their corresponding mesh resolutions, allowing for automated LOD assignment across large-scale models.
 ---
 
 📊 Performance Metrics
 
 
-| Metric |Improvement (Avg) | Peak Improvement |
+| Metric | Improvement (Avg) | Peak Improvement |
+| --- | --- | --- |
 | Triangles (GPU) | 3x Reduction | 5x Reduction |
 | Draw Calls (CPU) | Constant | - |
 ---
